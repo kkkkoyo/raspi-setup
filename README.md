@@ -72,6 +72,33 @@ python3 --version
 
 ---
 
+## サーマルプリンターのセットアップ（オプション）
+
+### デバイスの確認
+
+```bash
+lsusb
+```
+
+以下のような出力が表示されることを確認：
+```
+Bus 001 Device 006: ID 0416:5011 Winbond Electronics Corp. Virtual Com Port
+```
+
+### udevルールの設定
+
+```bash
+sudo tee /etc/udev/rules.d/99-usb-thermal-printer.rules > /dev/null << 'EOF'
+SUBSYSTEM=="usb", ATTR{idVendor}=="0416", ATTR{idProduct}=="5011", MODE="0666", GROUP="lp"
+EOF
+
+# udevルールを即座に反映
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
+---
+
 ## ディレクトリ構成
 
 ```bash
